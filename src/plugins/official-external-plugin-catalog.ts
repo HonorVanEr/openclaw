@@ -6,7 +6,6 @@ import officialExternalChannelCatalog from "../../scripts/lib/official-external-
 import officialExternalPluginCatalog from "../../scripts/lib/official-external-plugin-catalog.json" with { type: "json" };
 import officialExternalProviderCatalog from "../../scripts/lib/official-external-provider-catalog.json" with { type: "json" };
 import { MANIFEST_KEY } from "../compat/legacy-names.js";
-import { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
 import { isRecord } from "../utils.js";
 import type {
   PluginManifestChannelConfig,
@@ -385,6 +384,7 @@ export async function loadHostedOfficialExternalPluginCatalogEntries(params?: {
   let response: Response | undefined;
   let release: (() => Promise<void>) | undefined;
   try {
+    const { fetchWithSsrFGuard } = await import("../infra/net/fetch-guard.js");
     const guarded = await fetchWithSsrFGuard({
       url: url.href,
       fetchImpl: params?.fetchImpl,
