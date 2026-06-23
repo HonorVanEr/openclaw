@@ -1503,6 +1503,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
         forcedRuntime: params?.forcedRuntime,
         mockBaseUrl: mock?.baseUrl,
       }),
+      transport.createRuntimeEnvPatch?.(),
       buildQaGatewayHeapCheckpointRuntimeEnvPatch(),
     ),
   });
