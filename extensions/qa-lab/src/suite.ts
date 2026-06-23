@@ -123,6 +123,7 @@ export type QaSuiteRunParams = {
   enabledPluginIds?: string[];
   controlUiEnabled?: boolean;
   transportReadyTimeoutMs?: number;
+  workerStartStaggerMs?: number;
   forcedRuntime?: RuntimeId;
   runtimePair?: [RuntimeId, RuntimeId];
   captureRuntimeParityCell?: boolean;
@@ -432,6 +433,7 @@ function buildQaIsolatedScenarioWorkerParams(params: {
     startLab: params.startLab,
     controlUiEnabled: scenarioRequiresControlUi(params.scenario),
     transportReadyTimeoutMs: params.input?.transportReadyTimeoutMs,
+    workerStartStaggerMs: params.input?.workerStartStaggerMs,
     forcedRuntime: params.input?.forcedRuntime,
   };
 }
@@ -1173,7 +1175,8 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
 
     try {
       updateScenarioRun();
-      const workerStartStaggerMs = resolveQaSuiteWorkerStartStaggerMs(concurrency);
+      const workerStartStaggerMs =
+        params?.workerStartStaggerMs ?? resolveQaSuiteWorkerStartStaggerMs(concurrency);
       writeQaSuiteProgress(progressEnabled, `scenario start stagger=${workerStartStaggerMs}ms`);
       const scenarios: QaSuiteScenarioResult[] = await mapQaSuiteWithConcurrency(
         selectedScenarios,
